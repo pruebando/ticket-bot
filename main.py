@@ -39,11 +39,12 @@ async def on_message(message):
             pija = json.load(pene)
             for value in pija.keys():
                 if pija[str(value)][0]==message.author.id:
-                    await client.get_channel(pija[value][1]).send(f"{message.author.name} say:\n{message.content}")
+                    embeddm=discord.Embed(description=f"{message.author.name} say:\n{message.content}", color=0xCC71DF)
+                    await client.get_channel(pija[value][1]).send(embed = embeddm)
                     break
                 kaka +=1
                 if len(pija.keys()) == kaka:
-                    a = await message.channel.send("React with 🔮 to open your ticket!")
+                    a = await message.channel.send(embed=discord.Embed(description="React with 🔮 to open your ticket!", color=0xCC71DF))
                     await a.add_reaction("🔮")
                     
                     def check(reaction, user):
@@ -56,7 +57,11 @@ async def on_message(message):
                         await message.channel.send("❌ Time of reaction is out")
                         raise
                     a = await client.get_guild(797082033318789181).create_text_channel(name=str(message.author.name), category=client.get_channel(797115849848258601))
-                    await a.send("⭐ <@&797315822543831070> An user has opened a new ticket! ⭐")
+                    await a.send(content="<@&797315822543831070>",embed=discord.Embed(description="⭐ <@&797315822543831070> An user has opened a new ticket! ⭐" , color=0xCC71DF))
+                    
+                    embeone = discord.Embed(description=":exclamation:Please wait to the staff team to answer you, they are not robots so it will take some time to answer:exclamation:", color=0xCC71DF)
+                    
+                    await message.channel.send(embed=embeone)
                     with open("tickets.json", "r") as paj:
                         popo = paj
                         pis = json.load(popo)
@@ -72,7 +77,8 @@ async def on_message(message):
           auwu = json.load(a)
           for a in auwu.keys():
               if message.channel.id == auwu[a][1]:
-                  await client.get_user(auwu[a][0]).send(f"{message.author.name} says: \n{message.content}")
+                  embedchannel=discord.Embed(description =f"{message.author.name} says: \n{message.content}", color=0xCC71DF)
+                  await client.get_user(auwu[a][0]).send(embed=embedchannel)
                   break 
 
 @client.command(hidden=True, name="close")
@@ -88,11 +94,12 @@ async def close_ticket(ctx, *args):
          for xe in asd.keys():
              if asd[xe][1] == ctx.message.channel.id:
                  print("si")
-                 await client.get_user(asd[xe][0]).send(f"Ticket closed! Reason: [{args}]")
+                 aomebe=discord.Embed(description=f"Ticket closed! Reason: [{args}]", color=0xCC71DF)
+                 await client.get_user(asd[xe][0]).send(embed=aomebe)
                  asd.pop(f"ticket_{ctx.channel.id}", None )
                  with open("tickets.json", "w") as awa:
                   json.dump(asd, awa)
-                  await ctx.send(f"Ticket closed! Reason: [{args}]")
+                  await ctx.send(embed=aomebe)
                   await asyncio.sleep(6)
                   await ctx.channel.delete()                
                   break
@@ -100,8 +107,23 @@ async def close_ticket(ctx, *args):
                  print('a')
         
 
-        
+@client.command()
+async def about(ctx):
+    ao = discord.Embed(title="Hi, i am a bot only for this server created to help the server!\nmy owner is orainge#5151 and the dev team people now are \n \norainge#5151", color=0xCC71DF, timestamp=ctx.message.created_at)
+  
+    await ctx.send(embed=ao)
     
+@client.command()
+async def info(ctx):
+ await ctx.send(embed=discord.Embed(description="**Hello! I am Saturn Advertising’s Bot! I was programmed to keep the server safe and manage modmail. If you spot a bug, contact through my modmail! I am managed by the Technical Team.**", color=0xCC71DF, timestamp=ctx.message.created_at))
+
+@client.command(hidden=True)
+@commands.is_owner()
+async def say(ctx, *args):
+    await ctx.message.delete()
+    await ctx.send(' '.join(args))
+
+
 
 cogs = ["admin",]
 for i in cogs:

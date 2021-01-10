@@ -12,6 +12,11 @@ intents.presences = True
 
 client = commands.Bot(command_prefix='s!', intents=intents)
 
+category_id= 797115849848258601
+server_id = 797082033318789181
+
+
+
 @client.command()
 async def ping(ctx):
     await ctx.send(f'🏓 Pong! I have {(round(client.latency * 1000))} ms of latency.')
@@ -21,7 +26,7 @@ async def on_ready():
     listau = ["Spying The Mods", "Spying Users", "Trolling Mods", "Doing Bad Bot Things", "Seeing Tickets", "Dm For Cool Bot Help"]
     await client.change_presence(activity=discord.Streaming(name=random.choice(listau), url="https://pene.com"))
     
-    
+
  
 @client.event
 async def on_message(message):
@@ -56,7 +61,7 @@ async def on_message(message):
                     except:
                         await message.channel.send("❌ Time of reaction is out")
                         raise
-                    a = await client.get_guild(797082033318789181).create_text_channel(name=str(message.author.name), category=client.get_channel(797115849848258601))
+                    a = await client.get_guild(server_id).create_text_channel(name=str(message.author.name), category=client.get_channel(category_id))
                     await a.send(content="<@&797315822543831070>",embed=discord.Embed(description="⭐ <@&797315822543831070> An user has opened a new ticket! ⭐" , color=0xCC71DF))
                     
                     embeone = discord.Embed(description=":exclamation:Please wait to the staff team to answer you, they are not robots so it will take some time to answer:exclamation:", color=0xCC71DF)
@@ -72,7 +77,7 @@ async def on_message(message):
 @client.listen()
 async def on_message(message):
     if message.guild is not None:
-     if message.guild.id == 797082033318789181 and not message.author.bot:
+     if message.guild.id == server_id and not message.author.bot:
       with open("tickets.json", "r") as a:
           auwu = json.load(a)
           for a in auwu.keys():
@@ -87,7 +92,7 @@ async def close_ticket(ctx, *args):
      args = ''
     else:
      args = ' '.join(args)
-    if ctx.message.guild.id == 797082033318789181:
+    if ctx.message.guild.id == server_id:
         
      with open("tickets.json", "r") as yeye:
          asd = json.load(yeye)
@@ -95,7 +100,10 @@ async def close_ticket(ctx, *args):
              if asd[xe][1] == ctx.message.channel.id:
                  print("si")
                  aomebe=discord.Embed(description=f"Ticket closed! Reason: [{args}]", color=0xCC71DF)
-                 await client.get_user(asd[xe][0]).send(embed=aomebe)
+                 try:
+                  await client.get_user(asd[xe][0]).send(embed=aomebe)
+                 except:
+                  await ctx.send("failed to dm user")
                  asd.pop(f"ticket_{ctx.channel.id}", None )
                  with open("tickets.json", "w") as awa:
                   json.dump(asd, awa)
